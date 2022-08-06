@@ -38,3 +38,6 @@ Write your own printf function.
 - Our main files will include your main header file (main.h): #include main.h
 
 - You might want to look at the gcc flag -Wno-format when testing with your _printf and the standard printf. Example of test file that you could use:
+# Authors
+* Chinecherem Nduka - chinechnuel@gmai.com
+* Peter Macharia - peterthunder69@gmail.com
