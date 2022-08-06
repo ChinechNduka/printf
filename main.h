@@ -2,35 +2,21 @@
 #define MAIN_H
 
 #include <stdlib.h>
+#include <unistd.h>
 #include <stdarg.h>
 
 int _putchar(char c);
-int _puts(char *str);
 int _printf(const char *format, ...);
-int print_char(va_list c);
-int print_string(va_list s);
-int print_dec(va_list d);
-int print_hex(va_list x);
-int print_HEX(va_list X);
-int print_octal(va_list o);
-int print_bin(va_list b);
-int print_unsigned(va_list u);
-int print_rot13(va_list R);
-int print_rev(va_list r);
-int print_int(va_list i);
-int print_S(va_list S);
-int print_p(va_list p);
+int print_num(long int n);
+int print_string(char *str);
+int print_binary(unsigned int num);
+int print_unknown_spec(char c);
+int print_odh(char c, unsigned int num);
+int dec_to_oct(unsigned int num);
+int dec_to_hex(char c, unsigned int num);
+int print_S(char *);
+int print_reverse(char *s);
+int print_rot13(char *c);
+int print_pointer(void *p);
 
-/**
- * struct code_format - structure format
- * @sc: specifier
- * @f: function associated
- */
-
-typedef struct code_format
-{
-  char *sc;
-  int (*f)(va_list);
-} code_f;
-
-#endif
+#endif /* MAIN_H */
