@@ -1,92 +1,82 @@
-#include "main.h"
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdarg.h>
+#include <unistd.h>
+#include "main.h"
 
 /**
- * printIdentifiers - prints special characters
- * @next: character after the %
- * @arg: argument for the indentifier
- * Return: the number of characters printed
- * (excluding the null byte used to end output to strings)
+ * find_correct_func - finding the format for _printf
+ * @format: format
+ * Return: NULL
  */
 
-int printIdentifiers(char next, va_list arg)
+int (*find_correct_func(const char *format))(va_list)
 {
-	int functsIndex;
+unsigned int i = 0;
+code_f find_f[] = {
+{"c", print_char},
+{"s", print_string},
+{"i", print_int},
+{"d", print_dec},
+{"r", print_rev},
+{"b", print_bin},
+{"u", print_unsigned},
+{"o", print_octal},
+{"x", print_hex},
+{"X", print_HEX},
+{"R", print_rot13},
+{"S", print_S},
+{"p", print_p},
+{NULL, NULL}
+};
 
-	identifierStruct functs[] = {
-		{"c", print_char},
-		{"s", print_str},
-		{"d", print_int},
-		{"i", print_int},
-		{"u", print_unsigned},
-		{"b", print_unsignedToBinary},
-		{"o", print_oct},
-		{"x", print_hex},
-		{"X", print_HEX},
-		{"S", print_STR},
-		{NULL, NULL}
-	};
-
-	for (functsIndex = 0; functs[functsIndex].indentifier != NULL; functsIndex++)
-	{
-		if (functs[functsIndex].indentifier[0] == next)
-			return (functs[functsIndex].printer(arg));
-	}
-	return (0);
+while (find_f[i].sc)
+{
+if (find_f[i].sc[0] == (*format))
+return (find_f[i].f);
+i++;
+}
+return (NULL);
 }
 
 /**
- * _printf - mimic printf from stdio
- * Description: produces output according to a format
- * write output to stdout, the standard output stream
- * @format: character string composed of zero or more directives
- *
- * Return: the number of characters printed
- * (excluding the null byte used to end output to strings)
- * return -1 for incomplete identifier error
+ * _printf - produces an output based on format
+ * @format: format
+ * Return: size
  */
-
 int _printf(const char *format, ...)
 {
-	unsigned int i;
-	int identifierPrinted = 0, charPrinted = 0;
-	va_list arg;
-
-	va_start(arg, format);
-	if (format == NULL)
-		return (-1);
-
-	for (i = 0; format[i] != '\0'; i++)
-	{
-		if (format[i] != '%')
-		{
-			_putchar(format[i]);
-			charPrinted++;
-			continue;
-		}
-		if (format[i + 1] == '%')
-		{
-			_putchar('%');
-			charPrinted++;
-			i++;
-			continue;
-		}
-		if (format[i + 1] == '\0')
-			return (-1);
-
-		identifierPrinted = printIdentifiers(format[i + 1], arg);
-		if (identifierPrinted == -1 || identifierPrinted != 0)
-			i++;
-		if (identifierPrinted > 0)
-			charPrinted += identifierPrinted;
-
-		if (identifierPrinted == 0)
-		{
-			_putchar('%');
-			charPrinted++;
-		}
-	}
-	va_end(arg);
-	return (charPrinted);
+va_list list;
+int (*f)(va_list);
+unsigned int i = 0, len = 0;
+if (format == NULL)
+return (-1);
+va_start(list, format);
+while (format[i])
+{
+while (format[i] != '%' && format[i])
+{
+_putchar(format[i]);
+len++;
+i++;
+}
+if (format[i] == '\0')
+return (len);
+f = find_correct_func(&format[i + 1]);
+if (f != NULL)
+{
+len += f(list);
+i += 2;
+continue;
+}
+if (!format[i + 1])
+return (-1);
+_putchar(format[i]);
+len++;
+if (format[i + 1] == '%')
+i += 2;
+else
+i++;
+}
+va_end(list);
+return (len);
 }
