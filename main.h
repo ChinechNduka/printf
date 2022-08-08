@@ -1,20 +1,22 @@
-#ifndef PRINT_F
-#define PRINT_F
+#ifndef MAIN_H
+#define MAIN_H
 
-#include <unistd.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <limits.h>
+#include <unistd.h>
 
 /**
-* struct convert - defines a structure for symbols and functions
-*
-* @sym: The operator
-* @f: The function associated
-*/
+ * struct format - match the conversion specifiers for printf
+ * @id: type char pointer of the specifier i.e (l, h) for (d, i, u, o, x, X)
+ * @f: type pointer to function for the conversion specifier
+ *
+ */
 
 typedef struct format
 {
-	char *sym;
+	char *id;
 	int (*f)(va_list);
 } convert_match;
 
